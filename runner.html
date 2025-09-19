@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Achievement Runner</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ffffff 50%, #75c043 75%, #138808 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            border: 3px solid #000080;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            z-index: 100;
+        }
+        
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            z-index: 200;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #ff6b35, #138808);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,107,53,0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ui-overlay">
+        <div>🇮🇳 <strong>Achievement Runner</strong></div>
+        <div>Score: <span id="score">0</span></div>
+        <div>Achievements: <span id="achievements">0/5</span></div>
+    </div>
+    
+    <div class="instructions">
+        <div><strong>Controls:</strong></div>
+        <div>⬆️ Arrow Up / Space: Jump</div>
+        <div>⬇️ Arrow Down: Slide</div>
+        <div>🎯 Collect: Achievement Hotspots</div>
+        <div>❌ Avoid: Red Obstacles</div>
+        <div>📚 Learn: Historical Events</div>
+    </div>
+    
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    
+    <div id="gameOver" class="game-over">
+        <h2>🇮🇳 Mission Complete! 🇮🇳</h2>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <p>Achievements Collected: <span id="finalAchievements">0/5</span></p>
+        <button class="btn" onclick="restartGame()">🚀 Play Again</button>
+        <button class="btn" onclick="window.location.href='index.html'">🌊 View 3D Experience</button>
+    </div>
+    
+    <script src="runner.js"></script>
+</body>
+</html>

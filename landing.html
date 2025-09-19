@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Incredible India</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ffffff 50%, #75c043 75%, #138808 100%);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,107,53,0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+        
+        .container {
+            position: relative;
+            padding: 80px 20px 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .flag-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 120%;
+            height: 100%;
+            background-image: url('27130.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            animation: flagWave 6s ease-in-out infinite;
+            transform-origin: left center;
+            z-index: 1;
+        }
+        
+        @keyframes flagWave {
+            0%, 100% { 
+                transform: translateX(-10%) skewX(0deg) scaleX(1);
+                filter: brightness(1);
+            }
+            25% { 
+                transform: translateX(-5%) skewX(2deg) scaleX(1.02);
+                filter: brightness(1.1);
+            }
+            50% { 
+                transform: translateX(0%) skewX(0deg) scaleX(1.05);
+                filter: brightness(1.2);
+            }
+            75% { 
+                transform: translateX(-5%) skewX(-2deg) scaleX(1.02);
+                filter: brightness(1.1);
+            }
+        }
+        
+        .title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b35, #000080, #138808);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: fadeInUp 1s ease-out, titleGlow 3s ease-in-out infinite;
+            z-index: 10;
+            position: relative;
+        }
+        
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255,107,53,0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(0,0,128,0.5)); }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.3s both;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            color: #555;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out 0.8s both;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .achievement {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.9) 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08), 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,107,53,0.2);
+            border-left: 5px solid #ff6b35;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+            animation: cardFloat 4s ease-in-out infinite;
+        }
+        
+        .achievement:nth-child(odd) {
+            animation-delay: -2s;
+        }
+        
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .achievement::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .achievement::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,107,53,0.1), transparent);
+            animation: rotate 8s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .achievement:hover::after {
+            opacity: 1;
+        }
+        
+        .achievement:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12), 0 8px 20px rgba(255,107,53,0.1);
+        }
+        
+        .achievement:hover::before {
+            left: 100%;
+        }
+        
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            animation: bounce 3s ease-in-out infinite;
+        }
+        
+        .achievement-title {
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .achievement-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .project-info {
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,249,250,0.95) 100%);
+            padding: 35px;
+            border-radius: 25px;
+            margin-bottom: 3rem;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out 0.7s both;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .project-title {
+            color: #000080;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .project-features {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .project-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #75c043 75%, #138808 100%);
+            color: white;
+            padding: 20px 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(255,107,53,0.3), 0 4px 10px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out 0.9s both, ctaPulse 3s ease-in-out infinite;
+            margin-bottom: 2rem;
+            z-index: 10;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        @keyframes ctaPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 25px rgba(255,107,53,0.3), 0 4px 10px rgba(0,0,0,0.1); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 35px rgba(255,107,53,0.4), 0 6px 15px rgba(0,0,0,0.15); }
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .tech-specs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            animation: fadeInUp 1s ease-out 1.4s both;
+            font-size: 1rem;
+            color: #34495e;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,249,250,0.85) 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .tech-spec {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+        
+        .tech-spec:hover {
+            transform: scale(1.1);
+        }
+        
+        .tech-spec {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .ashoka-wheel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #000080;
+            border-radius: 50%;
+            animation: rotate 10s linear infinite;
+        }
+        
+        .ashoka-wheel::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #000080;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 60px 15px 80px; }
+            .title { font-size: 2.5rem; margin-bottom: 1rem; }
+            .subtitle { font-size: 1.2rem; }
+            .achievements { grid-template-columns: 1fr; gap: 20px; }
+            .project-features { flex-direction: column; gap: 10px; }
+            .tech-specs { gap: 15px; }
+            .project-info { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="flag-animation"></div>
+    <div class="ashoka-wheel"></div>
+    
+    <div class="floating-particles"></div>
+    
+    <div class="container">
+        <h1 class="title">🇮🇳 INCREDIBLE INDIA 🇮🇳</h1>
+        <h2 class="subtitle">Interactive 3D Journey Through Modern India</h2>
+        
+        <div class="project-info">
+            <div class="project-title">🌊 Achievement Stream Experience</div>
+            <p style="color: #555; line-height: 1.5; margin-bottom: 15px;">
+                Journey through a flowing stream of India's modern achievements in an interactive 3D environment. 
+                Click on glowing hotspots to watch documentary videos showcasing India's remarkable progress.
+            </p>
+            <div class="project-features">
+                <div class="project-feature">🎥 <span>Video Hotspots</span></div>
+                <div class="project-feature">🌊 <span>Flowing Stream</span></div>
+                <div class="project-feature">✨ <span>Animated Particles</span></div>
+                <div class="project-feature">📱 <span>Modal Videos</span></div>
+            </div>
+        </div>
+        
+        <p class="description">
+            <strong>Stream Through 5 Major Achievements of Modern India</strong><br>
+            Navigate along the flowing achievement stream and click on glowing hotspots to watch 
+            exclusive documentary videos about India's technological prowess and global leadership.
+        </p>
+        
+        <div class="achievements">
+            <div class="achievement">
+                <div class="achievement-icon">🚀</div>
+                <div class="achievement-title">Mars Mission Success</div>
+                <div class="achievement-desc">Mangalyaan made India the first nation to reach Mars orbit in the first attempt, showcasing our space technology excellence.</div>
+            </div>
+            <div class="achievement">
+                <div class="achievement-icon">💳</div>
+                <div class="achievement-title">Digital Payment Revolution</div>
+                <div class="achievement-desc">UPI transformed India into a cashless economy leader with over 8 billion monthly transactions, inspiring global adoption.</div>
+            </div>
+            <div class="achievement">
+                <div class="achievement-icon">🏥</div>
+                <div class="achievement-title">World's Largest Vaccination Drive</div>
+                <div class="achievement-desc">Administered over 2 billion COVID-19 vaccine doses, demonstrating unprecedented healthcare logistics and digital infrastructure.</div>
+            </div>
+            <div class="achievement">
+                <div class="achievement-icon">🌱</div>
+                <div class="achievement-title">Renewable Energy Leader</div>
+                <div class="achievement-desc">4th largest renewable energy capacity globally, with ambitious targets for solar and wind power expansion by 2030.</div>
+            </div>
+            <div class="achievement">
+                <div class="achievement-icon">🦄</div>
+                <div class="achievement-title">Startup Unicorn Hub</div>
+                <div class="achievement-desc">3rd largest startup ecosystem worldwide with 100+ unicorns, driving innovation in fintech, edtech, and e-commerce.</div>
+            </div>
+        </div>
+        
+        <a href="game.html" class="cta-button">🎮 Start Badge Collection Game</a>
+        
+        <div class="tech-specs">
+            <div class="tech-spec">⚡ <span>WebGL Powered</span></div>
+            <div class="tech-spec">🎮 <span>Three.js Engine</span></div>
+            <div class="tech-spec">🎥 <span>Video Integration</span></div>
+            <div class="tech-spec">🌊 <span>Particle System</span></div>
+        </div>
+    </div>
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.querySelector('.floating-particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 8 + 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Background ambient sound (placeholder)
+        function initAmbientSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Create subtle background tone
+            function createTone(frequency, duration) {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.02, audioContext.currentTime + 0.1);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+            
+            // Play subtle ambient tones
+            document.addEventListener('click', () => {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                createTone(220, 0.5); // Soft A note
+            });
+        }
+        
+        // Enhanced hover effects
+        function addInteractiveEffects() {
+            const achievements = document.querySelectorAll('.achievement');
+            
+            achievements.forEach((achievement, index) => {
+                achievement.addEventListener('mouseenter', () => {
+                    achievement.style.transform = `translateY(-8px) scale(1.02) rotate(${Math.random() * 2 - 1}deg)`;
+                });
+                
+                achievement.addEventListener('mouseleave', () => {
+                    achievement.style.transform = 'translateY(0px) scale(1) rotate(0deg)';
+                });
+            });
+            
+            // CTA button sound effect
+            const ctaButton = document.querySelector('.cta-button');
+            ctaButton.addEventListener('mouseenter', () => {
+                ctaButton.style.transform = 'translateY(-3px) scale(1.05)';
+            });
+        }
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initAmbientSound();
+            addInteractiveEffects();
+        });
+    </script>
+</body>
+</html>

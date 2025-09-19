@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India 3D Model</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #1a1a1a 50%, #75c043 75%, #138808 100%); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+        
+        canvas { 
+            display: block; 
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><filter id="noise"><feTurbulence baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .hotspot-info {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255,107,53,0.95) 0%, rgba(0,0,128,0.9) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            pointer-events: none;
+            max-width: 300px;
+            font-size: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            animation: tooltipFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes tooltipFadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .ui-overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            color: white;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .controls-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,107,53,0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .achievement-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b35, #138808);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 8px 25px rgba(255,107,53,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="script.js"></script>
+    <div class="noise-overlay"></div>
+    <div class="ui-overlay">
+        <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">🇮🇳 INCREDIBLE INDIA</div>
+        <div>Achievement Stream Experience</div>
+    </div>
+    <div class="controls-info">
+        <div><strong>Controls:</strong></div>
+        <div>🖱️ Mouse: Rotate View</div>
+        <div>🔍 Scroll: Zoom In/Out</div>
+        <div>🎯 Click: Explore Hotspots</div>
+    </div>
+    <div class="achievement-counter">
+        <span id="achievement-count">0/5</span> Achievements Discovered
+    </div>
+    <div id="hotspot-info" class="hotspot-info"></div>
+</body>
+</html>
