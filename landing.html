@@ -136,6 +136,20 @@
             position: relative;
         }
         
+        .last-two-achievements {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            margin-bottom: 4rem;
+        }
+        
+        .last-two-achievements .achievement {
+            flex: 0 0 280px;
+            max-width: 280px;
+        }
+        
         .achievement {
             background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.9) 100%);
             padding: 25px;
@@ -412,20 +426,20 @@
             <div class="project-title">🌊 Achievement Stream Experience</div>
             <p style="color: #555; line-height: 1.5; margin-bottom: 15px;">
                 Journey through a flowing stream of India's modern achievements in an interactive 3D environment. 
-                Click on glowing hotspots to watch documentary videos showcasing India's remarkable progress.
+                Click on achievement cards to explore detailed 3D experiences showcasing India's remarkable progress.
             </p>
             <div class="project-features">
-                <div class="project-feature">🎥 <span>Video Hotspots</span></div>
                 <div class="project-feature">🌊 <span>Flowing Stream</span></div>
                 <div class="project-feature">✨ <span>Animated Particles</span></div>
-                <div class="project-feature">📱 <span>Modal Videos</span></div>
+                <div class="project-feature">🎮 <span>Interactive Cards</span></div>
+                <div class="project-feature">🎆 <span>3D Experiences</span></div>
             </div>
         </div>
         
         <p class="description">
             <strong>Stream Through 5 Major Achievements of Modern India</strong><br>
-            Navigate along the flowing achievement stream and click on glowing hotspots to watch 
-            exclusive documentary videos about India's technological prowess and global leadership.
+            Navigate along the flowing achievement stream and click on achievement cards to explore 
+            interactive 3D experiences about India's technological prowess and global leadership.
         </p>
         
         <div class="achievements">
@@ -444,6 +458,9 @@
                 <div class="achievement-title">Renewable Energy Leader</div>
                 <div class="achievement-desc">4th largest renewable energy capacity globally, with ambitious targets for solar and wind power expansion by 2030.</div>
             </div>
+        </div>
+        
+        <div class="last-two-achievements">
             <div class="achievement">
                 <div class="achievement-icon">💳</div>
                 <div class="achievement-title">Digital Payment Revolution</div>
