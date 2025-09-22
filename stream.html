@@ -7,10 +7,11 @@
     <style>
         body { 
             margin: 0; 
-            overflow: hidden; 
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #1a1a1a 50%, #75c043 75%, #138808 100%); 
+            overflow-x: hidden; 
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ffffff 50%, #75c043 75%, #138808 100%); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
+            min-height: 100vh;
         }
         
         .noise-overlay {
@@ -24,11 +25,67 @@
             z-index: 1;
         }
         
-        canvas { 
-            display: block; 
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            margin: 10px;
+        .stream-container {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stream-path {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            align-items: center;
+        }
+        
+        .achievement-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,249,250,0.9) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px solid rgba(255,107,53,0.3);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .achievement-card:nth-child(even) {
+            align-self: flex-end;
+        }
+        
+        .achievement-card:nth-child(odd) {
+            align-self: flex-start;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 10px 25px rgba(255,107,53,0.2);
+            border-color: #ff6b35;
+        }
+        
+        .achievement-card.unlocked {
+            background: linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(255,255,255,0.95) 100%);
+            border-color: #ff6b35;
+        }
+        
+        .achievement-card.unlocked::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
         
         .ui-overlay {
@@ -39,6 +96,48 @@
             color: white;
             font-size: 18px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000080;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-description {
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-status {
+            text-align: center;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .status-locked {
+            background: rgba(200,200,200,0.3);
+            color: #666;
+            border: 2px dashed #ccc;
+        }
+        
+        .status-unlocked {
+            background: linear-gradient(135deg, #ff6b35, #138808);
+            color: white;
+            border: 2px solid #ff6b35;
         }
         
         .badge-inventory {
@@ -69,6 +168,8 @@
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255,255,255,0.2);
         }
+        
+
         
         .modal {
             position: fixed;
@@ -156,7 +257,7 @@
     <div class="noise-overlay"></div>
     <div class="ui-overlay">
         <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">🇮🇳 ACHIEVEMENT STREAM</div>
-        <div>Click on hotspots to place your badges and learn about India's achievements</div>
+        <div>Click on cards to learn about India's achievements</div>
     </div>
     
     <div class="badge-inventory">
@@ -165,10 +266,15 @@
     </div>
     
     <div class="controls-info">
-        <div><strong>Controls:</strong></div>
-        <div>🖱️ Mouse: Rotate View</div>
-        <div>🔍 Scroll: Zoom In/Out</div>
-        <div>🎯 Click: Place Badge & View Info</div>
+        <div><strong>Navigation:</strong></div>
+        <div>🎯 Click Cards: View Achievement Details</div>
+        <div>📜 Scroll: Navigate Through Stream</div>
+    </div>
+    
+    <div class="stream-container">
+        <div class="stream-path">
+            <div id="achievementCards"></div>
+        </div>
     </div>
     
     <div id="accessDenied" class="access-denied" style="display: none;">
@@ -184,8 +290,7 @@
         </div>
     </div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
     <script src="stream.js"></script>
 </body>
 </html>

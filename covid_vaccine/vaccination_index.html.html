@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India's COVID-19 Vaccination Drive 2021 - Interactive Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .section {
+            min-height: 100vh;
+            padding: 100px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .section h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #00c851;
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #28a745;
+        }
+        
+        .section p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 1rem;
+        }
+        
+        .mission-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 1000px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 200, 81, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #00c851;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00c851;
+        }
+        
+        .hotspot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #00c851;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00c851;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.4;
+            z-index: 11;
+            display: none;
+        }
+        
+        .tooltip h3 {
+            color: #00c851;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .viewer-section {
+            min-height: 100vh;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .viewer-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        .virus-info {
+            flex: 1;
+            background: rgba(0, 200, 81, 0.1);
+            border: 1px solid #00c851;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 220px;
+        }
+        
+        .virus-info h3 {
+            color: #00c851;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .component {
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(0, 200, 81, 0.2);
+        }
+        
+        .component:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .component-name {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+        
+        .component-desc {
+            font-size: 0.7rem;
+            line-height: 1.2;
+            color: #bbb;
+        }
+        
+        #interactive-viewer {
+            width: 800px;
+            height: 600px;
+            border: 2px solid #00c851;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        
+        .viewer-controls {
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="hotspot" id="hotspot1" style="top: 30%; left: 20%;">
+        <div class="tooltip" id="tooltip1">
+            <h3>CoWIN Platform</h3>
+            <p>India's digital vaccination platform that registered over 900 million citizens and scheduled appointments efficiently across the nation.</p>
+        </div>
+    </div>
+    
+    <div class="content">
+        <section class="section">
+            <h1>India's COVID-19 Vaccination Drive 2021</h1>
+            <p>The world's largest vaccination campaign! India administered over 2 billion COVID-19 vaccine doses, demonstrating unprecedented healthcare logistics and planning capabilities.</p>
+
+        </section>
+        
+        <section class="section">
+            <h2>Historic Achievement</h2>
+            <p>Starting on January 16, 2021, India launched the world's largest vaccination drive, covering a population of 1.4 billion people across urban and rural areas.</p>
+            <div class="mission-stats">
+                <div class="stat-card">
+                    <div class="stat-number">2B+</div>
+                    <div>Total Doses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">944M</div>
+                    <div>People Vaccinated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1M+</div>
+                    <div>Vaccination Sites</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">28</div>
+                    <div>States & UTs</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Vaccination Strategy</h2>
+            <p>India's phased approach prioritized healthcare workers, frontline workers, elderly citizens, and those with comorbidities. The drive utilized both Covishield and Covaxin vaccines manufactured domestically.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Digital Innovation</h2>
+            <p>The CoWIN platform revolutionized vaccine distribution with real-time tracking, appointment scheduling, and digital certificates. Over 900 million people registered on the platform.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Global Impact</h2>
+            <p>India's vaccination success became a model for the world, showcasing efficient healthcare delivery at scale. The country also exported vaccines to over 95 nations under the Vaccine Maitri initiative.</p>
+        </section>
+        
+        <section class="viewer-section">
+            <h2>Interactive 3D Visualization</h2>
+            <p>Explore the COVID-19 virus model in 3D. Use your mouse to rotate and examine the structure.</p>
+            
+            <div class="viewer-container">
+                <div class="virus-info">
+                    <h3>Components</h3>
+                    
+                    <div class="component">
+                        <div class="component-name">Spike Proteins</div>
+                        <div class="component-desc">Bind to human cells. Vaccine target.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Envelope</div>
+                        <div class="component-desc">Outer protective membrane.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Membrane</div>
+                        <div class="component-desc">Gives virus its shape.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Nucleocapsid</div>
+                        <div class="component-desc">Protects viral RNA.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">RNA Genome</div>
+                        <div class="component-desc">30,000 base genetic code.</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div id="interactive-viewer"></div>
+                    <div class="viewer-controls">
+                        <p>Left Click + Drag: Rotate | Scroll: Zoom | Right Click + Drag: Pan</p>
+                    </div>
+                </div>
+                
+                <div class="virus-info">
+                    <h3>Structure</h3>
+                    
+                    <div class="component">
+                        <div class="component-name">Size</div>
+                        <div class="component-desc">80-120 nm diameter.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Type</div>
+                        <div class="component-desc">Betacoronavirus RNA virus.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Replication</div>
+                        <div class="component-desc">Hijacks host cell machinery.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Transmission</div>
+                        <div class="component-desc">Respiratory droplets.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Variants</div>
+                        <div class="component-desc">Alpha, Delta, Omicron.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="vaccination_script.js"></script>
+</body>
+</html>

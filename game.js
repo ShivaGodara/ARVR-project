@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 let gameRunning = true;
 let badgesCollected = [];
 
-const player = { x: 100, y: 320, width: 30, height: 30, velocityY: 0, jumping: false };
+const player = { x: 100, y: 330, width: 30, height: 30, velocityY: 0, jumping: false };
 let obstacles = [];
 let badges = [];
 let obstacleTimer = 0;
@@ -55,8 +55,8 @@ function updatePlayer() {
         player.velocityY += 0.8;
         player.y += player.velocityY;
         
-        if (player.y >= 320) {
-            player.y = 320;
+        if (player.y >= 330) {
+            player.y = 330;
             player.jumping = false;
             player.velocityY = 0;
         }
@@ -156,7 +156,7 @@ function restartGame() {
     badges = [];
     obstacleTimer = 0;
     badgeTimer = 0;
-    player.y = 320;
+    player.y = 330;
     player.jumping = false;
     player.velocityY = 0;
     

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISRO Mars Mission - Interactive Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .section {
+            min-height: 100vh;
+            padding: 100px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+
+        
+        .section h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #ff6b35;
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #ffa500;
+        }
+        
+        .section p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 1rem;
+        }
+        
+        .mission-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 1000px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 107, 53, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #ff6b35;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        
+        .hotspot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff6b35;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ff6b35;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.4;
+            z-index: 11;
+            display: none;
+        }
+        
+        .tooltip h3 {
+            color: #ff6b35;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .viewer-section {
+            min-height: 100vh;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .viewer-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        .rocket-info {
+            flex: 1;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid #ff6b35;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 220px;
+        }
+        
+        .rocket-info h3 {
+            color: #ff6b35;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .component {
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+        }
+        
+        .component:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .component-name {
+            color: #ffa500;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+        
+        .component-desc {
+            font-size: 0.7rem;
+            line-height: 1.2;
+            color: #bbb;
+        }
+        
+        #interactive-viewer {
+            width: 800px;
+            height: 600px;
+            border: 2px solid #ff6b35;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        
+        .viewer-controls {
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <!-- Hotspots -->
+    <div class="hotspot" id="hotspot1">
+        <div class="tooltip" id="tooltip1">
+            <h3>Payload Fairing</h3>
+            <p>The 3.2m diameter fairing protects the spacecraft during launch. Made of carbon fiber composite, it splits into two halves and jettisons after atmospheric exit to reduce weight.</p>
+        </div>
+    </div>
+    
+
+    
+    <div class="content">
+        <section class="section">
+            <h1>ISRO Mars Orbiter Mission</h1>
+            <p>India's first interplanetary mission, also known as Mangalyaan, successfully reached Mars orbit on September 24, 2014, making India the first country to succeed in its maiden Mars mission.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Mission Overview</h2>
+            <p>The Mars Orbiter Mission was launched on November 5, 2013, from Sriharikota using the PSLV-C25 rocket. The spacecraft traveled 666 million kilometers over 298 days to reach Mars.</p>
+            <div class="mission-stats">
+                <div class="stat-card">
+                    <div class="stat-number">₹450</div>
+                    <div>Crores Total Cost</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">298</div>
+                    <div>Days Journey</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">666M</div>
+                    <div>Kilometers Traveled</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1,350</div>
+                    <div>Kg Spacecraft Mass</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Scientific Objectives</h2>
+            <p>The mission aimed to study Mars' atmosphere, surface features, and search for methane gas. It carried five scientific instruments including a color camera, thermal infrared imaging spectrometer, and methane sensor.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Historic Achievement</h2>
+            <p>MOM made India the fourth space agency to reach Mars, after NASA, Soviet Union, and ESA. It was achieved at a fraction of the cost of similar missions, demonstrating India's cost-effective space technology capabilities.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Legacy & Future</h2>
+            <p>The success of Mangalyaan paved the way for future interplanetary missions and established India as a major player in space exploration. ISRO continues to build on this success with upcoming missions to Venus and beyond.</p>
+        </section>
+        
+        <section class="viewer-section">
+            <h2>Interactive 3D Model</h2>
+            <p>Explore the GSLV MK3 rocket in detail. Use your mouse to rotate and zoom the model.</p>
+            
+            <div class="viewer-container">
+                <div class="rocket-info">
+                    <h3>Components</h3>
+                    
+                    <div class="component">
+                        <div class="component-name">Payload Fairing</div>
+                        <div class="component-desc">3.2m diameter protective shell.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Cryogenic Stage</div>
+                        <div class="component-desc">Upper stage with LOX/LH2 fuel.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Core Stage</div>
+                        <div class="component-desc">L110 liquid propellant stage.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Strap-on Boosters</div>
+                        <div class="component-desc">Two S200 solid fuel boosters.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Mars Orbiter</div>
+                        <div class="component-desc">1,350kg spacecraft payload.</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div id="interactive-viewer"></div>
+                    <div class="viewer-controls">
+                        <p>Left Click + Drag: Rotate | Scroll: Zoom | Right Click + Drag: Pan</p>
+                    </div>
+                </div>
+                
+                <div class="rocket-info">
+                    <h3>Specifications</h3>
+                    
+                    <div class="component">
+                        <div class="component-name">Height</div>
+                        <div class="component-desc">43.43 meters tall.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Mass</div>
+                        <div class="component-desc">640 tonnes at liftoff.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Thrust</div>
+                        <div class="component-desc">15,200 kN total thrust.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Payload Capacity</div>
+                        <div class="component-desc">4,000kg to GTO orbit.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Launch Site</div>
+                        <div class="component-desc">Sriharikota, India.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

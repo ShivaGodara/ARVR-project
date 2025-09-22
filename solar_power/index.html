@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India's Solar Power Revolution - Interactive Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .section {
+            min-height: 100vh;
+            padding: 100px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .section h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #ffd700;
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #ffb347;
+        }
+        
+        .section p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 1rem;
+        }
+        
+        .mission-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 1000px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #ffd700;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .hotspot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ffd700;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffd700;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.4;
+            z-index: 11;
+            display: none;
+        }
+        
+        .tooltip h3 {
+            color: #ffd700;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .viewer-section {
+            min-height: 100vh;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .viewer-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            max-width: 1400px;
+            width: 100%;
+        }
+        
+        .panel-info {
+            flex: 1;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 220px;
+        }
+        
+        .panel-info h3 {
+            color: #ffd700;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .component {
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .component:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .component-name {
+            color: #ffb347;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+        
+        .component-desc {
+            font-size: 0.7rem;
+            line-height: 1.2;
+            color: #bbb;
+        }
+        
+        #interactive-viewer {
+            width: 800px;
+            height: 600px;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        
+        .viewer-controls {
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <!-- Hotspots -->
+    <div class="hotspot" id="hotspot1" style="top: 25%; left: 15%;">
+        <div class="tooltip" id="tooltip1">
+            <h3>Solar Panel Array</h3>
+            <p>India's solar installations have grown from 2.6 GW in 2014 to over 70 GW in 2023, making it the 4th largest solar power producer globally.</p>
+        </div>
+    </div>
+    
+    <div class="content">
+        <section class="section">
+            <h1>☀️ India's Solar Power Revolution</h1>
+            <p>India has emerged as a global leader in renewable energy, with solar power at the forefront of this transformation. The country aims to achieve 500 GW of renewable energy capacity by 2030.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Solar Mission Overview</h2>
+            <p>The National Solar Mission, launched in 2010, has transformed India into one of the world's largest solar markets. From just 2.6 GW in 2014 to over 70 GW today.</p>
+            <div class="mission-stats">
+                <div class="stat-card">
+                    <div class="stat-number">70+ GW</div>
+                    <div>Solar Capacity</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4th</div>
+                    <div>Global Ranking</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500 GW</div>
+                    <div>2030 Target</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">₹2.44</div>
+                    <div>Per kWh Cost</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>Major Solar Parks</h2>
+            <p>India hosts some of the world's largest solar installations, including the Bhadla Solar Park in Rajasthan (2,245 MW) and Pavagada Solar Park in Karnataka (2,050 MW).</p>
+        </section>
+        
+        <section class="section">
+            <h2>Technology & Innovation</h2>
+            <p>India has developed indigenous solar manufacturing capabilities and innovative financing models, making solar energy accessible and affordable for millions of households and businesses.</p>
+        </section>
+        
+        <section class="section">
+            <h2>Environmental Impact</h2>
+            <p>Solar power has helped India avoid over 50 million tons of CO2 emissions annually, contributing significantly to global climate goals and sustainable development.</p>
+        </section>
+        
+        <section class="viewer-section">
+            <h2>Interactive 3D Solar Panel</h2>
+            <p>Explore a detailed solar panel model. Use your mouse to rotate and zoom the model to understand its components.</p>
+            
+            <div class="viewer-container">
+                <div class="panel-info">
+                    <h3>Components</h3>
+                    
+                    <div class="component">
+                        <div class="component-name">Solar Cells</div>
+                        <div class="component-desc">Photovoltaic cells convert sunlight to electricity.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Glass Cover</div>
+                        <div class="component-desc">Tempered glass protects cells from weather.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">EVA Layer</div>
+                        <div class="component-desc">Ethylene vinyl acetate encapsulation.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Back Sheet</div>
+                        <div class="component-desc">Protective polymer backing material.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Frame</div>
+                        <div class="component-desc">Aluminum frame for structural support.</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div id="interactive-viewer"></div>
+                    <div class="viewer-controls">
+                        <p>Left Click + Drag: Rotate | Scroll: Zoom | Right Click + Drag: Pan</p>
+                    </div>
+                </div>
+                
+                <div class="panel-info">
+                    <h3>Specifications</h3>
+                    
+                    <div class="component">
+                        <div class="component-name">Power Output</div>
+                        <div class="component-desc">300-400 watts per panel.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Efficiency</div>
+                        <div class="component-desc">18-22% conversion rate.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Dimensions</div>
+                        <div class="component-desc">2m x 1m standard size.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Lifespan</div>
+                        <div class="component-desc">25+ years warranty.</div>
+                    </div>
+                    
+                    <div class="component">
+                        <div class="component-name">Technology</div>
+                        <div class="component-desc">Monocrystalline silicon.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

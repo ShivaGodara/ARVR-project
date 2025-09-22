@@ -1,147 +1,142 @@
 // Check if user has collected all badges
 const collectedBadges = JSON.parse(localStorage.getItem('collectedBadges') || '[]');
+const hasCompletedGame = collectedBadges.length >= 5;
 
-if (collectedBadges.length < 5) {
-    document.getElementById('accessDenied').style.display = 'block';
-} else {
-    initializeStream();
-}
+// Always initialize stream, but show different content based on completion status
+initializeStream();
 
 function initializeStream() {
-    // Display collected badges
+    // Display collected badges and completion status
     const badgeInventory = document.getElementById('badgeInventory');
-    badgeInventory.innerHTML = collectedBadges.map(badge => `${badge.icon} ${badge.name}`).join('<br>');
+    if (hasCompletedGame) {
+        badgeInventory.innerHTML = `<div style="color: #00ff00; font-weight: bold; margin-bottom: 10px;">✅ ALL GAMES COMPLETED!</div>` + collectedBadges.map(badge => `${badge.icon} ${badge.name}`).join('<br>');
+    } else {
+        badgeInventory.innerHTML = `<div style="margin-bottom: 10px;">Collected: ${collectedBadges.length}/5</div>` + collectedBadges.map(badge => `${badge.icon} ${badge.name}`).join('<br>');
+    }
 
-    // Three.js setup
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, (window.innerWidth - 20) / (window.innerHeight - 20), 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-
-    renderer.setSize(window.innerWidth - 20, window.innerHeight - 20);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.setClearColor(0x0a0a0a, 0.2);
-    document.body.appendChild(renderer.domElement);
-
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-    scene.add(ambientLight);
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    directionalLight.position.set(15, 15, 8);
-    directionalLight.castShadow = true;
-    scene.add(directionalLight);
-
-    // Achievement stream
-    const streamGeometry = new THREE.CylinderGeometry(0.3, 0.3, 25, 16);
-    const streamMaterial = new THREE.MeshPhongMaterial({ 
-        color: 0x4CAF50,
-        transparent: true,
-        opacity: 0.8
-    });
-    const stream = new THREE.Mesh(streamGeometry, streamMaterial);
-    stream.rotation.z = Math.PI / 2;
-    scene.add(stream);
-
-    // Hotspots for badge placement
-    const hotspots = [];
+    // Achievement data
     const achievements = [
-        { name: 'Mars Mission 2014', icon: '🚀', event: 'Mangalyaan reached Mars orbit - First country to succeed on first attempt!', position: new THREE.Vector3(-8, 2, 0) },
-        { name: 'Digital Payments 2016', icon: '💳', event: 'UPI revolutionized digital payments in India!', position: new THREE.Vector3(-4, -1, 1) },
-        { name: 'Vaccination Drive 2021', icon: '💉', event: 'World\'s largest vaccination drive - 2+ billion doses!', position: new THREE.Vector3(0, 1.5, -1) },
-        { name: 'Solar Power 2022', icon: '☀️', event: '4th largest renewable energy capacity globally!', position: new THREE.Vector3(4, -0.5, 0.5) },
-        { name: 'Startup Hub 2023', icon: '🦄', event: '100+ unicorn startups - 3rd largest ecosystem!', position: new THREE.Vector3(8, 0.8, -0.5) }
+        { 
+            name: 'Mars Mission 2014', 
+            icon: '🚀', 
+            event: 'Mangalyaan reached Mars orbit - First country to succeed on first attempt! This historic achievement made India the fourth space agency to reach Mars and the first to do so in their maiden attempt.',
+            year: '2014'
+        },
+        { 
+            name: 'Vaccination Drive 2021', 
+            icon: '💉', 
+            event: 'World\'s largest vaccination drive - 2+ billion doses! India administered over 2 billion COVID-19 vaccine doses, demonstrating unprecedented healthcare logistics and planning.',
+            year: '2021'
+        },
+        { 
+            name: 'Solar Power 2022', 
+            icon: '☀️', 
+            event: '4th largest renewable energy capacity globally! India has become a world leader in renewable energy with massive solar installations and green energy initiatives.',
+            year: '2022'
+        },
+        { 
+            name: 'Digital Payments 2016', 
+            icon: '💳', 
+            event: 'UPI revolutionized digital payments in India! The Unified Payments Interface transformed India into a global leader in digital transactions with over 8 billion monthly transactions.',
+            year: '2016'
+        },
+        { 
+            name: 'Startup Hub 2023', 
+            icon: '🦄', 
+            event: '100+ unicorn startups - 3rd largest ecosystem! India now hosts over 100 unicorn companies, making it the third-largest startup ecosystem in the world.',
+            year: '2023'
+        }
     ];
 
+    // Create achievement cards
+    const cardsContainer = document.getElementById('achievementCards');
+    
     achievements.forEach((achievement, index) => {
-        const geometry = new THREE.SphereGeometry(0.6, 32, 32);
-        const material = new THREE.MeshPhongMaterial({ 
-            color: 0xff6b35,
-            transparent: true,
-            opacity: 0.9,
-            emissive: 0xff6b35,
-            emissiveIntensity: 0.2
-        });
-        const hotspot = new THREE.Mesh(geometry, material);
-        hotspot.position.copy(achievement.position);
-        hotspot.userData = { achievement, placed: false };
+        const isUnlocked = collectedBadges.some(badge => badge.name === achievement.name);
+        const canAccess = hasCompletedGame || isUnlocked;
         
-        scene.add(hotspot);
-        hotspots.push(hotspot);
+        const card = document.createElement('div');
+        card.className = `achievement-card ${canAccess ? 'unlocked' : ''}`;
+        card.innerHTML = `
+            <div class="card-icon">${achievement.icon}</div>
+            <div class="card-title">${achievement.name}</div>
+            <div class="card-description">${achievement.event}</div>
+            <div class="card-status ${canAccess ? 'status-unlocked' : 'status-locked'}">
+                ${canAccess ? (isUnlocked ? '🏆 BADGE EARNED - Click to View' : '✅ UNLOCKED - Click to View Details') : '🔒 Complete Game to Unlock'}
+            </div>
+        `;
+        
+        if (canAccess) {
+            if (achievement.name === 'Mars Mission 2014') {
+                card.addEventListener('click', () => window.location.href = 'marsmission/index.html');
+            } else if (achievement.name === 'Vaccination Drive 2021') {
+                card.addEventListener('click', () => window.location.href = 'covid_vaccine/vaccination_index.html.html');
+            } else if (achievement.name === 'Solar Power 2022') {
+                card.addEventListener('click', () => window.location.href = 'solar_power/index.html');
+            } else {
+                card.addEventListener('click', () => showAchievementModal(achievement, isUnlocked));
+            }
+            card.style.cursor = 'pointer';
+        } else {
+            card.style.opacity = '0.6';
+            card.style.cursor = 'not-allowed';
+        }
+        
+        cardsContainer.appendChild(card);
+        
+        // Add staggered animation
+        setTimeout(() => {
+            card.style.animation = `fadeInUp 0.6s ease-out forwards`;
+        }, index * 200);
     });
-
-    // Mouse interaction
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-
-    function onMouseClick(event) {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(hotspots);
-        
-        if (intersects.length > 0) {
-            const hotspot = intersects[0].object;
-            if (!hotspot.userData.placed) {
-                hotspot.userData.placed = true;
-                hotspot.material.color.setHex(0x00ff00);
-                showAchievementModal(hotspot.userData.achievement);
+    
+    // Add CSS animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
-    }
-
-    window.addEventListener('click', onMouseClick);
-
-    // Camera controls
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-
-    camera.position.set(0, 3, 12);
-    controls.update();
-
-    // Animation loop
-    function animate() {
-        requestAnimationFrame(animate);
         
-        const time = Date.now() * 0.001;
-        hotspots.forEach((hotspot, index) => {
-            const scale = 1 + Math.sin(time * 2 + index) * 0.1;
-            hotspot.scale.setScalar(scale);
-            hotspot.position.y += Math.sin(time * 1.5 + index) * 0.002;
-        });
-        
-        controls.update();
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        camera.aspect = (window.innerWidth - 20) / (window.innerHeight - 20);
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth - 20, window.innerHeight - 20);
-    });
+        .achievement-card {
+            opacity: 0;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
-function showAchievementModal(achievement) {
+function showAchievementModal(achievement, hasBadge = false) {
     const modalContent = document.getElementById('modalContent');
+    const statusText = hasBadge ? 'BADGE EARNED!' : 'ACHIEVEMENT UNLOCKED!';
+    const statusColor = hasBadge ? 'linear-gradient(135deg, #ffd700, #ff6b35)' : 'linear-gradient(135deg, #ff6b35, #138808)';
+    
     modalContent.innerHTML = `
         <div style="text-align: center; margin-bottom: 20px;">
             <div style="font-size: 60px; margin-bottom: 10px;">${achievement.icon}</div>
             <h2 style="color: #000080; margin-bottom: 10px; font-size: 28px;">${achievement.name}</h2>
-            <div style="background: linear-gradient(135deg, #ff6b35, #138808); color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; font-size: 14px; font-weight: bold;">BADGE PLACED!</div>
+            <div style="background: ${statusColor}; color: white; padding: 8px 20px; border-radius: 20px; display: inline-block; font-size: 14px; font-weight: bold; margin-bottom: 10px;">${statusText}</div>
+            <div style="color: #666; font-size: 16px; font-weight: bold;">Year: ${achievement.year}</div>
+            ${!hasCompletedGame ? '<div style="color: #ff6b35; font-size: 14px; margin-top: 5px; font-style: italic;">Complete all games to unlock full access</div>' : ''}
         </div>
         <div style="width: 100%; height: 300px; background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%); border: 3px dashed #ff6b35; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; border-radius: 15px;">
             <div style="text-align: center; color: #666;">
                 <div style="font-size: 48px; margin-bottom: 10px;">📹</div>
-                <div style="font-size: 18px; font-weight: bold;">Video Placeholder</div>
-                <div style="font-size: 14px; margin-top: 5px; color: #ff6b35;">Documentary about ${achievement.name}</div>
+                <div style="font-size: 18px; font-weight: bold;">Documentary Video</div>
+                <div style="font-size: 14px; margin-top: 5px; color: #ff6b35;">Learn more about ${achievement.name}</div>
             </div>
         </div>
-        <p style="color: #555; line-height: 1.6; font-size: 16px;">${achievement.event}</p>
+        <p style="color: #555; line-height: 1.6; font-size: 16px; text-align: left;">${achievement.event}</p>
+        <div style="margin-top: 20px; text-align: center;">
+            ${achievement.name === 'Mars Mission 2014' ? '<a href="marsmission/index.html" style="background: linear-gradient(135deg, #ff6b35, #138808); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; margin-right: 10px;">🚀 Explore Mars Mission</a>' : ''}
+            ${!hasCompletedGame ? '<a href="game.html" style="background: linear-gradient(135deg, #ff6b35, #138808); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; margin-right: 10px;">Play Games</a>' : ''}
+            <button onclick="closeModal()" style="background: linear-gradient(135deg, #ff6b35, #138808); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer;">Continue Journey</button>
+        </div>
     `;
     
     document.getElementById('achievementModal').style.display = 'flex';
@@ -150,3 +145,22 @@ function showAchievementModal(achievement) {
 function closeModal() {
     document.getElementById('achievementModal').style.display = 'none';
 }
+
+// Add smooth scrolling for better navigation
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.achievement-card');
+    
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.transform = 'translateY(0) scale(1)';
+                entry.target.style.opacity = '1';
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    cards.forEach(card => {
+        observer.observe(card);
+    });
+});
